@@ -22,4 +22,4 @@ E' quindi liberamente scaricabile e utilizzabile da chiunque.<br>
 
 ## Licenze
 - Il software è pubblicato/rilasciato sotto i termini della licenza [GPL-3.0](https://github.com/GrazianoCapelli/Sillabatore/blob/master/LICENSE)
-- Il file delle regole di LibreOffice è Software Libero. LibreOffice è soggetto ai termini della Mozilla Public License v2.0. È in parte basato sul codice originato da Apache OpenOffice (disponibile sotto la Apache License 2.0) ma include anche software che differisce da una versione all'altra, rilasciato sotto una gran varietà di altre licenze Open Source.
+- File delle regole di LibreOffice: LibreOffice è Software Libero ed è soggetto ai termini della Mozilla Public License v2.0. È in parte basato sul codice originato da Apache OpenOffice (disponibile sotto la Apache License 2.0) ma include anche software che differisce da una versione all'altra, rilasciato sotto una gran varietà di altre licenze Open Source.
