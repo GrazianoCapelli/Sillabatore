@@ -1,0 +1,10 @@
+--------------------------------------------------------------------------------
+UTILIZZO DEL SILLABATORE
+--------------------------------------------------------------------------------
+
+1) Estrarre questi file in una cartella;
+2) Aprire un terminale;
+3) > cd cartella
+4) > ./Sillabatore "parola_da_sillabare"
+
+PS: Le parole da sillabare vanno scritte in carattere minuscolo

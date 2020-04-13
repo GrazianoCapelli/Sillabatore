@@ -1,2 +1,2 @@
 # Sillabatore
-Un sillabatore da riga di comando per Linux
+Un sillabatore a riga di comando per Linux
