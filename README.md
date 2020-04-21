@@ -19,6 +19,7 @@ E' quindi liberamente scaricabile e utilizzabile da chiunque.<br>
 ```c++
 ./Sillabatore "parola_da_sillabare"
 ```
+_NB: La parola da sillabare va scritta in minuscolo._
 
 ## Licenze
 - Il software è pubblicato/rilasciato sotto i termini della licenza [GPL-3.0](https://github.com/GrazianoCapelli/Sillabatore/blob/master/LICENSE)
