@@ -24,14 +24,18 @@
 #include <sstream>
 #include <fstream>
 
+#include <algorithm>
+
 using namespace std;
 
 
-string pattern[500];	// L'array che contiene i pattern di sillabazione
+string pattern[500];			// L'array che contiene i pattern di sillabazione
 short pattern_values[500][15];
 string pattern_string[500];
 string numbers = "0123456789";
 int nPatterns = 0;
+bool isVerbose = false;			// Opzione che indica se vizualizzare le regole di sillabazione
+
 
 // La funzione carica i pattern di sillabazione dal file hyph_it_IT.dic
 // e li inserisce nell'array dei Pattern;
@@ -75,55 +79,101 @@ void Sillaba(string mparola)
 	string parola = "." + mparola + ".";
 	short parola_values[parola.size() + 1];
 
-	cout << "\n  " << mparola << "\n----------------------------------------------\n";
+	if (isVerbose) cout << "\n  " << mparola << "\n----------------------------------------------\n";
 	for (int ii = 0; ii < parola.size() + 1; ii++) {
 		parola_values[ii] = 0;
-		cout << parola_values[ii];
+		if (isVerbose) cout << parola_values[ii];
 	}
-	cout << "\n\n";
+	if (isVerbose) cout << "\n\n";
 
 	if (nPatterns > 1) {		// Controlla che siano stati caricati i pattern
 		for (int i = 0; i < nPatterns; i++) {		// Ripete per ogni pattern caricato
 			string sparola = parola;
 			int ifound = sparola.rfind(pattern_string[i]);
 			while (ifound != string::npos) {		// Finchè trova delle occorrenze
-				for (int ii = 0; ii < ifound + 1; ii++) cout << " ";
-				cout << pattern_string[i];
-				cout << "\n";
-				for (int ii = 0; ii < ifound; ii++) cout << " ";
+				if (isVerbose) {
+					for (int ii = 0; ii < ifound + 1; ii++) cout << " ";
+					cout << pattern_string[i] << "\n";
+					for (int ii = 0; ii < ifound; ii++) cout << " ";
+				}
 				for (int ii = 0; ii <= pattern_string[i].size(); ii++) {
-					cout << pattern_values[i][ii];
+					if (isVerbose) cout << pattern_values[i][ii];
 					if (parola_values[ii + ifound] < pattern_values[i][ii]) parola_values[ii + ifound] = pattern_values[i][ii];
 				}
-				cout << "\n";
+				if (isVerbose) cout << "\n";
 				// Cerca la prossima occorrenza
 				sparola = parola.substr(0,ifound);
 				ifound = sparola.rfind(pattern_string[i]);
 			}
 		}
 	}
-	cout << "\n\n";
-	for (int ii = 0; ii < parola.size() + 1; ii++) cout << parola_values[ii];	// Stampa i valori finali
-	cout << "\n----------------------------------------------\n";
-
+	if (isVerbose) {
+		cout << "\n\n";
+		for (int ii = 0; ii < parola.size() + 1; ii++) cout << parola_values[ii];	// Stampa i valori finali
+		cout << "\n----------------------------------------------\n";
+	}
+	
 	string parolasillabata;
 	for (int ii = 1; ii < parola.size()-1; ii++) {		// Stampa la parola con sillabazione
 		parolasillabata += parola[ii];
 		if (parola_values[ii+1] % 2) parolasillabata += " ";
 	}
-	cout << "  " << parolasillabata << "\n\n";
+	if (isVerbose) cout << "  ";
+	cout << parolasillabata << "\n";
+	if (isVerbose) cout << "\n";
 
+}
+
+
+static void show_usage(std::string name)
+{
+	std::cerr 	<< "\nUso: " << name << " [OPZIONI] parola_da_sillabare\n"
+				<< "\nIl programma divide in sillabe la parola in ingresso\nutilizzando il file delle regole di LibreOffice hyph_it_IT.dic,\nche deve essere presente nella cartella del file eseguibile.\n"
+				<< "E' possibile scaricare il file delle regole al seguente link:\nhttps://raw.githubusercontent.com/LibreOffice/dictionaries/master/it_IT/hyph_it_IT.dic\n\n"
+				<< "Opzioni:\n"
+				<< "\t-h,--help\t\tVisualizza questo messaggio di aiuto\n"
+				<< "\t-v,--verbose\t\tVisualizza tutte le regole applicate\n"
+				<< "\t--version\t\tRestituisce il numero di versione del programma\n"
+				<< std::endl;
 }
 
 
 int main(int argc, char **argv)
 {
-	if (argc > 0) {
-		string parola = argv[1];
+	string parola = "";
 
-		LoadPatterns("../hyph_it_IT.dic");
-		//Sillaba(parola);
+	if (argc < 2) {
+        show_usage(argv[0]);
+        return 0;
+    }
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if ((arg == "-h") || (arg == "--help")) {				// Visualizza help
+            show_usage(argv[0]);
+            return 0;
+        } else if ((arg == "-v") || (arg == "--verbose")) {		// Visualizza regole di sillabazione
+			isVerbose = true;
+		} else if (arg == "--version") {						// Visualizza la versione dell'applicazione
+			cerr << "\nSillabatore v1.01 (03/05/2020)\n"
+				 << "Copyright © 2019 Graziano Capelli.\n\n"
+				 << "Licenza GPLv3+: GNU GPL version 3 o successiva <https://gnu.org/licenses/gpl.html>.\n"
+				 << "This is free software: you are free to change and redistribute it.\n"
+				 << "There is NO WARRANTY, to the extent permitted by law.\n\n";
+			return 0;
+		} else if (arg.at(0) != '-') {
+			parola = arg;
+			// convert string to back to lower case
+			std::for_each(parola.begin(), parola.end(), [](char & c) {
+				c = ::tolower(c);
+			});
+		}
+    }
+	
+	if (parola != "") {
+		LoadPatterns("./hyph_it_IT.dic");
 		Sillaba(parola);
+	} else {
+		show_usage(argv[0]);
 	}
 
 	return 0;
